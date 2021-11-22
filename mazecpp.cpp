@@ -7,23 +7,10 @@
 using namespace std;
 
 int MazeSize = 9;
-//vector<vector<int>> Maze(MazeSize, vector<int>(MazeSize));
 
 vector< vector<int> > Maze;
 
-/*
-{
-    {1,1,0,0,0,0,0,0,0},
-    {0,1,0,0,0,0,0,0,0},
-    {0,1,1,1,0,0,0,0,0},
-    {0,0,0,1,1,1,1,0,0},
-    {0,0,0,0,0,0,1,0,0},
-    {0,0,0,0,1,1,1,0,0},
-    {0,0,0,0,1,0,0,0,0},
-    {0,0,0,0,1,1,1,1,0},
-    {0,0,0,0,0,0,0,1,1}
-};
-*/
+
 const int Wall = 0;
 const int Free = 1;
 const int Path = 8;
@@ -116,11 +103,11 @@ void MazePrint()
 bool Restriction()
 {
 
-    if ((Maze[StartingPoint.Y][StartingPoint.X] != Wall) || (Maze[EndingPoint.Y][EndingPoint.X] != Wall) || (MazeSize >= 2) || (MazeSize <= 50))
+    if ((Maze[StartingPoint.Y][StartingPoint.X] == Wall) || (Maze[EndingPoint.Y][EndingPoint.X] == Wall) || (MazeSize < 2) || (MazeSize > 50))
     {
-        return true;
+        return false;
     }
-    else return false;
+    else return true;
 }
 
 bool Result()
