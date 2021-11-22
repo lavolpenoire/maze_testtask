@@ -1,20 +1,43 @@
 ﻿#include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include <time.h>
+#include <vector>
 
 
 using namespace std;
 
-const int MazeSize = 2;
-char Maze[MazeSize][MazeSize + 1] =
-{
-    "10",
-    "01"};
+int MazeSize = 9;
+//vector<vector<int>> Maze(MazeSize, vector<int>(MazeSize));
 
-const char Wall = '0';
-const char Free = '1';
-const char Path = '*';
+vector< vector<int> > Maze;
+
+/*
+{
+    {1,1,0,0,0,0,0,0,0},
+    {0,1,0,0,0,0,0,0,0},
+    {0,1,1,1,0,0,0,0,0},
+    {0,0,0,1,1,1,1,0,0},
+    {0,0,0,0,0,0,1,0,0},
+    {0,0,0,0,1,1,1,0,0},
+    {0,0,0,0,1,0,0,0,0},
+    {0,0,0,0,1,1,1,1,0},
+    {0,0,0,0,0,0,0,1,1}
+};
+*/
+const int Wall = 0;
+const int Free = 1;
+const int Path = 8;
+
+
+
+void MazeInit(); 
+bool Result();
+void MazePrint();
+bool Restriction();
+bool Solve(int X, int Y);
+
+
+
 
 class COORDINATE
 {
@@ -26,25 +49,34 @@ public:
 };
 
 COORDINATE StartingPoint(0, 0);
-COORDINATE EndingPoint(MazeSize-1, MazeSize-1);
+COORDINATE EndingPoint(MazeSize - 1, MazeSize - 1);
+
+
+
+
+int main(int argc, char* argv[])
+{
+    MazeInit();
+    Result();
+}
+
+
 
 
 bool Solve(int X, int Y)
 {
+
     // Make the move (if it's wrong, we will backtrack later.
     Maze[Y][X] = Path;
 
-    // If you want progressive update, uncomment these lines...
-    //PrintDaMaze();
-    //Sleep(50);
 
-    // Check if we have reached our goal.
+    // Check if goal reached
     if (X == EndingPoint.X && Y == EndingPoint.Y)
     {
         return true;
     }
 
-    // Recursively search for our goal.
+    // Recursively search for goal
     if (X > 0 && Maze[Y][X - 1] == Free && Solve(X - 1, Y))
     {
         return true;
@@ -64,43 +96,70 @@ bool Solve(int X, int Y)
 
     // Otherwise we need to backtrack and find another solution.
     Maze[Y][X] = Free;
-
-    // If you want progressive update, uncomment these lines...
-    //PrintDaMaze();
-
-
+    
     return false;
+
 }
 
 void MazePrint()
 {
-    for (int Y = 0; Y < MazeSize; Y++)
+    for (const auto& row : Maze)
     {
-        printf("%s\n", Maze[Y]);
+        for (const auto& s : row) std::cout << s << ' ';
+        std::cout << std::endl;
     }
-    printf("\n");
+  
 }
 
 
-
-
-
-int main(int argc, char* argv[])
+//Check if  Maze fits the requirements: size, avialability of trting endd endding points
+bool Restriction()
 {
 
-    //char Maze[MazeSize][MazeSize];
-    //cout << "Input size of Maze" << endl;
-    //cin >> MazeSize;
-    //(const int)MazeSize;
+    if ((Maze[StartingPoint.Y][StartingPoint.X] != Wall) || (Maze[EndingPoint.Y][EndingPoint.X] != Wall) || (MazeSize >= 2) || (MazeSize <= 50))
+    {
+        return true;
+    }
+    else return false;
+}
 
-    
+bool Result()
+{
+    if (Restriction())
+    {
+        if ( Solve(StartingPoint.X, StartingPoint.Y) )
+        {
+            MazePrint();
+            cout << "Availability of path on your Maze:\n";
+            cout << boolalpha << Solve(StartingPoint.X, StartingPoint.Y) << endl;
+        }
+        else
+        {
+            MazePrint();
+            cout << "Availability of path on your Maze:\n";
+            cout << boolalpha << Solve(StartingPoint.X, StartingPoint.Y) << endl;
+        }
 
-
-    MazePrint();
-
-    cout << "Availability of path on your Maze:\n";
-    cout << boolalpha << Solve(StartingPoint.X, StartingPoint.Y) <<endl;
-    
+    }
+    else
+    {
+        cout << "False: wrong Maze\n";
+    }
     system("pause");
     return 0;
+}
+
+void MazeInit()
+{
+    Maze.resize(MazeSize, vector<int>(MazeSize));
+    Maze = 
+    {   {1,1,0,0,0,0,0,0,0},
+        {0,1,0,0,0,0,0,0,0},
+        {0,1,1,1,0,0,0,0,0},
+        {0,0,0,1,1,1,1,0,0},
+        {0,0,0,0,0,0,1,0,0},
+        {0,0,0,0,1,1,1,0,0},
+        {0,0,0,0,1,0,0,0,0},
+        {0,0,0,0,1,1,1,1,0},
+        {0,0,0,0,0,0,0,1,1}     };
 }
