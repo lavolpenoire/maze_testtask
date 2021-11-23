@@ -62,29 +62,32 @@ bool Solve(int X, int Y)
     {
         return true;
     }
+    else
+    {
+        // Recursively search for goal
+        if (X > 0 && Maze[Y][X - 1] == Free && Solve(X - 1, Y))
+        {
+            return true;
+        }
+        if (X < MazeSize && Maze[Y][X + 1] == Free && Solve(X + 1, Y))
+        {
+            return true;
+        }
+        if (Y > 0 && Maze[Y - 1][X] == Free && Solve(X, Y - 1))
+        {
+            return true;
+        }
+        if (Y < MazeSize && Maze[Y + 1][X] == Free && Solve(X, Y + 1))
+        {
+            return true;
+        }
 
-    // Recursively search for goal
-    if (X > 0 && Maze[Y][X - 1] == Free && Solve(X - 1, Y))
-    {
-        return true;
-    }
-    if (X < MazeSize && Maze[Y][X + 1] == Free && Solve(X + 1, Y))
-    {
-        return true;
-    }
-    if (Y > 0 && Maze[Y - 1][X] == Free && Solve(X, Y - 1))
-    {
-        return true;
-    }
-    if (Y < MazeSize && Maze[Y + 1][X] == Free && Solve(X, Y + 1))
-    {
-        return true;
-    }
+        // Otherwise we need to backtrack and find another solution.
+        Maze[Y][X] = Free;
 
-    // Otherwise we need to backtrack and find another solution.
-    Maze[Y][X] = Free;
-    
-    return false;
+        return false;
+
+    }
 
 }
 
@@ -112,19 +115,23 @@ bool Restriction()
 
 bool Result()
 {
+    cout << boolalpha;
+    
+    bool isSolved = Solve(StartingPoint.X, StartingPoint.Y) ;
+
     if (Restriction())
     {
-        if ( Solve(StartingPoint.X, StartingPoint.Y) )
+        if ( isSolved )
         {
             MazePrint();
             cout << "Availability of path on your Maze:\n";
-            cout << boolalpha << Solve(StartingPoint.X, StartingPoint.Y) << endl;
+            cout << isSolved << endl;
         }
         else
         {
-            MazePrint();
+            //MazePrint();
             cout << "Availability of path on your Maze:\n";
-            cout << boolalpha << Solve(StartingPoint.X, StartingPoint.Y) << endl;
+            cout << isSolved << endl;
         }
 
     }
